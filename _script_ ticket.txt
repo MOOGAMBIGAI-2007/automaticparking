@@ -1,0 +1,44 @@
+// 🎟️ GENERATE TICKET
+function generateTicket() {
+    let type = localStorage.getItem("vehicleType");
+
+    if (slots[type] > 0) {
+
+        let ticket = "T" + Date.now(); // unique ID
+
+        let data = {
+            type: type,
+            time: new Date().toLocaleString()
+        };
+
+        localStorage.setItem(ticket, JSON.stringify(data));
+
+        slots[type]--;
+        showSlots();
+
+        alert("🎟️ Ticket Generated: " + ticket);
+    } 
+    else {
+        alert("Parking Full ❌");
+    }
+}
+
+// 🚪 EXIT SYSTEM
+function exitParking() {
+    let ticket = prompt("Enter Ticket ID:");
+
+    if (localStorage.getItem(ticket)) {
+
+        let data = JSON.parse(localStorage.getItem(ticket));
+
+        slots[data.type]++; // free slot
+        localStorage.removeItem(ticket);
+
+        showSlots();
+
+        alert("Exit Successful ✅");
+    } 
+    else {
+        alert("Invalid Ticket ❌");
+    }
+}

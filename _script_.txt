@@ -1,0 +1,20 @@
+<script>
+function login() {
+    let user = document.getElementById("username").value.toLowerCase();
+    let pass = document.getElementById("password").value;
+
+    if (user === "bike" && pass === "123") {
+        localStorage.setItem("vehicleType", "2W");
+        alert("Login as 2 Wheeler 🚗");
+        window.location.href = "dashboard.html";
+    } 
+    else if (user === "car" && pass === "143") {
+        localStorage.setItem("vehicleType", "4W");
+        alert("Login as 4 Wheeler 🚙");
+        window.location.href = "dashboard.html";
+    } 
+    else {
+        alert("Invalid Login ❌");
+    }
+}
+</script>
