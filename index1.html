@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Parking Login</title>
+    <style>
+        body {
+            font-family: Arial;
+            text-align: center;
+            margin-top: 100px;
+        }
+        input {
+            padding: 10px;
+            margin: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            background: green;
+            color: white;
+            border: none;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Login Page</h2>
+
+    <div id="loginBox">
+        <input type="text" id="username" placeholder="Enter Username"><br>
+        <input type="password" id="password" placeholder="Enter Password (bike/car)"><br>
+        <button onclick="login()">Login</button>
+    </div>
+
+    <div id="output" class="hidden"></div>
+
+    <script>
+        function login() {
+            let user = document.getElementById("username").value;
+            let pass = document.getElementById("password").value;
+            let output = document.getElementById("output");
+
+            if(user === "admin" && pass === "bike") {
+                document.getElementById("loginBox").style.display = "none";
+                output.classList.remove("hidden");
+                output.innerHTML = `
+                    <h2>Bike Parking Details</h2>
+                    <p>B1 - Free</p>
+                    <p>B2 - Occupied</p>
+                    <p>B3 - Free</p>
+                `;
+            }
+            else if(user === "admin" && pass === "car") {
+                document.getElementById("loginBox").style.display = "none";
+                output.classList.remove("hidden");
+                output.innerHTML = `
+                    <h2>Car Parking Details</h2>
+                    <p>C1 - Occupied</p>
+                    <p>C2 - Free</p>
+                    <p>C3 - Free</p>
+                `;
+            }
+            else {
+                alert("Invalid Login! Use 'bike' or 'car'");
+            }
+        }
+    </script>
+
+</body>
+</html>
