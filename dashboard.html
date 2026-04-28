@@ -1,69 +1,96 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Parking Dashboard</title>
-    <style>
-        body {
-            font-family: Arial;
-            text-align: center;
-        }
-        .box {
-            border: 1px solid black;
-            padding: 20px;
-            margin: 20px;
-            display: inline-block;
-            width: 200px;
-        }
-        button {
-            padding: 8px;
-            margin-top: 10px;
-        }
-    </style>
+    <title>Smart Parking Dashboard</title>
+    <link rel="stylesheet" href="/static/style.css">
 </head>
+
 <body>
 
-    <h2>Parking Dashboard</h2>
+<h2>🚗 Smart Automatic Parking System</h2>
 
-    <div class="box">
-        <h3>Right</h3>
-        <p id="rightCount"></p>
-        <button onclick="view('right')">View</button>
+<a href="/entry"><button class="btn">Vehicle Entry</button></a>
+<a href="/exit"><button class="btn">Vehicle Exit</button></a>
+
+<!-- 🚗 CAR ANIMATION -->
+<div class="road">
+    <div class="car" id="car">🚗</div>
+</div>
+
+<!-- 📊 FLOOR STATUS -->
+<div class="container">
+
+{% for floor, types in data.floors.items() %}
+    <div class="card">
+        <h3>Floor {{floor}}</h3>
+
+        <p>2 Wheeler:
+        <span class="{{ 'free' if types['2W'] > 0 else 'full' }}">
+            {{types["2W"]}}
+        </span>
+        </p>
+
+        <p>4 Wheeler:
+        <span class="{{ 'free' if types['4W'] > 0 else 'full' }}">
+            {{types["4W"]}}
+        </span>
+        </p>
+
     </div>
+{% endfor %}
 
-    <div class="box">
-        <h3>Left</h3>
-        <p id="leftCount"></p>
-        <button onclick="view('left')">View</button>
-    </div>
+</div>
 
-    <div class="box">
-        <h3>Straight</h3>
-        <p id="straightCount"></p>
-        <button onclick="view('straight')">View</button>
-    </div>
+<!-- 🧭 DIRECTION SYSTEM -->
+<h3>Direction Guidance</h3>
 
-    <script>
-        let right = ["Occupied", "Free", "Free", "Occupied", "Free"];
-        let left = ["Free", "Occupied", "Occupied", "Free", "Free"];
-        let straight = ["Free", "Free", "Occupied", "Free", "Occupied"];
+<div>
+    <span class="arrow"
+    style="color: {{ 'green' if directions['LEFT'] > 0 else 'red' }}">
+        ⬅️ LEFT
+    </span>
 
-        function countFree(arr) {
-            let count = 0;
-            for(let i = 0; i < arr.length; i++) {
-                if(arr[i] === "Free") count++;
-            }
-            return count;
-        }
+    <span class="arrow"
+    style="color: {{ 'green' if directions['STRAIGHT'] > 0 else 'red' }}">
+        ⬆️ STRAIGHT
+    </span>
 
-        document.getElementById("rightCount").innerText = countFree(right) + " slots free";
-        document.getElementById("leftCount").innerText = countFree(left) + " slots free";
-        document.getElementById("straightCount").innerText = countFree(straight) + " slots free";
+    <span class="arrow"
+    style="color: {{ 'green' if directions['RIGHT'] > 0 else 'red' }}">
+        ➡️ RIGHT
+    </span>
+</div>
 
-        function view(direction) {
-            localStorage.setItem("dir", direction);
-            window.location.href = "slots.html";
-        }
-    </script>
+<!-- 🧾 QUEUE DISPLAY -->
+<h3>Waiting Queue</h3>
+
+{% if data.queue %}
+    {% for v in data.queue %}
+        <p>🚗 {{v}}</p>
+    {% endfor %}
+{% else %}
+    <p>No vehicles waiting</p>
+{% endif %}
+
+<!-- 🧠 CAR DIRECTION LOGIC -->
+<script>
+    let directions = {{ directions | tojson }};
+    let car = document.getElementById("car");
+
+    let best = Object.keys(directions).reduce((a, b) =>
+        directions[a] > directions[b] ? a : b
+    );
+
+    if (best === "LEFT") {
+        car.style.transform = "rotate(-20deg)";
+    } 
+    else if (best === "RIGHT") {
+        car.style.transform = "rotate(20deg)";
+    } 
+    else {
+        car.style.transform = "rotate(0deg)";
+    }
+</script>
 
 </body>
 </html>
